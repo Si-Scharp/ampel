@@ -4,9 +4,12 @@ part of 'ampel_cubit.dart';
 class AmpelState {
   late DreiAmpelZustand strassenAmpel;
   late ZweiAmpelZustand fusAmpel;
+  late bool fusgangerWartet;
 
-  AmpelState(DreiAmpelZustand zustand) {
+
+  AmpelState(DreiAmpelZustand zustand, bool fusgangerWartet) {
     strassenAmpel = zustand;
+    this.fusgangerWartet = fusgangerWartet;
     switch(strassenAmpel){
       case DreiAmpelZustand.aus:
         fusAmpel = ZweiAmpelZustand.aus;

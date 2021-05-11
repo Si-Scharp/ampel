@@ -7,10 +7,11 @@ part 'ampel_state.dart';
 
 class AmpelCubit extends Cubit<AmpelState> {
   AmpelCubit({DreiAmpelZustand startZustand = DreiAmpelZustand.aus})
-      : super(AmpelState(startZustand)) {
+      : super(AmpelState(startZustand, false)) {
     _zustand = startZustand;
   }
 
+  late bool _fusgangerWartet = false;
   late DreiAmpelZustand _zustand;
 
   void tick() {
@@ -23,15 +24,22 @@ class AmpelCubit extends Cubit<AmpelState> {
         break;
       case DreiAmpelZustand.rot:
         _zustand = DreiAmpelZustand.rotGelb;
+        _fusgangerWartet = false;
         break;
       case DreiAmpelZustand.rotGelb:
         _zustand = DreiAmpelZustand.grun;
         break;
       case DreiAmpelZustand.grun:
-        _zustand = DreiAmpelZustand.gelb;
+        if (_fusgangerWartet)
+          _zustand = DreiAmpelZustand.gelb;
         break;
     }
-    emit(AmpelState(_zustand));
+    emit(AmpelState(_zustand, _fusgangerWartet));
+  }
+
+  void setzeFusganger(bool? wert) {
+    _fusgangerWartet = wert ?? false;
+    emit(AmpelState(_zustand, _fusgangerWartet));
   }
 
 
@@ -44,7 +52,7 @@ class AmpelCubit extends Cubit<AmpelState> {
       throw Exception("Hauptampel-Zustand muss ${ZweiAmpelZustand.grun.toString()} sein um auszuschalten. Momentaner zustand ist ${_zustand.toString()}");
     }
 
-    emit(AmpelState(_zustand));
+    emit(AmpelState(_zustand, _fusgangerWartet));
   }
 
 }

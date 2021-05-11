@@ -85,6 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             ? () => context.read<AmpelCubit>().ausschalten()
                             : null,
                         child: Text("ausschalten"),
+                      ),
+                      Text("  Fußgänger wartet:"),
+                      Checkbox(value: state.fusgangerWartet,
+                        onChanged: (bool? v) {context.read<AmpelCubit>().setzeFusganger(v);},
                       )
                     ],
                   ),
